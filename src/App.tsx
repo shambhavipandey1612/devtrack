@@ -33,6 +33,8 @@ function Projects() {
   const [status, setStatus] =
     useState<Project["status"]>("In Progress");
   const [searchTerm,setsearchTerm]=useState("");
+  const[statusfilter,setStatusfilter]=useState("All");
+  const[sortOrder,setSortOrder]=useState("A-Z");
   const [editingProjectId, setEditingProjectId] =
     useState<number | null>(null);
 
@@ -103,9 +105,17 @@ function Projects() {
       );
     }
   };
-  const filteredProjects= projects.filter((project)=>
-  project.name.toLowerCase().includes(searchTerm.toLowerCase())
-);
+  const filteredProjects= projects.filter((project)=>{
+    const matchesSearch=project.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus=statusfilter==="All"||project.status===statusfilter;
+    return matchesSearch && matchesStatus;
+  });
+  const sortedProject=[...filteredProjects].sort((a,b)=>{
+    if(sortOrder==="A-Z"){
+      return a.name.localeCompare(b.name);
+    }
+    return b.name.localeCompare(a.name);
+  });
 
   return (
     <div>
@@ -137,6 +147,26 @@ function Projects() {
           setsearchTerm(e.target.value)}className="w-full rounded-lg border
           border-slate-300 bg-white px-4 py-3 outline-none
           focus:border-indigo-500"/>
+      </div>
+      <div className="mb-6">
+        <select value={statusfilter}onChange={(e)=>
+          setStatusfilter(e.target.value)} className="w-full rounded-lg
+          border border-slate-300 bg-white px-4 py-3 outline-none 
+          focus:border-indigo-500">
+            <option value="All">All Statuses</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+            <option value="On Hold">On Hold</option>
+          </select>
+      </div>
+      <div className="mb-6">
+        <select value={sortOrder} onChange={(e)=>
+          setSortOrder(e.target.value)}className="w-full rounded-lg border
+          border-slate-300 bg-white px-4 py-3 outline-none 
+          focus:border-indigo-500">
+            <option value="A-Z">Name(A-Z)</option>
+             <option value="Z-A">Name(Z-A)</option>
+          </select>
       </div>
 
       {/* Project Form */}
@@ -224,7 +254,7 @@ function Projects() {
 
       {/* Project Cards */}
       <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-        {filteredProjects.map((project) => (
+        {sortedProject.map((project) => (
           <div
             key={project.id}
             className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
