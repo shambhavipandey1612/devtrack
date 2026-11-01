@@ -1,37 +1,17 @@
+import { useProjects } from "../context/projectcontext";
+function getprogress(status:"In Progress"|"Completed"|"On Hold") {
+  if(status==="Completed"){
+    return 100;
+  }
+  if(status==="In Progress"){
+    return 50;
+  }
+  return 0;
+}
 
-type Project = {
-  id: number;
-  name: string;
-  description: string;
-  status: "In Progress" | "Completed" | "On Hold";
-  progress: number;
-};
-
-const projects: Project[] = [
-  {
-    id: 1,
-    name: "Portfolio Website",
-    description: "Personal portfolio using React and Tailwind CSS.",
-    status: "In Progress",
-    progress: 70,
-  },
-  {
-    id: 2,
-    name: "Weather Application",
-    description: "Weather updates using a public API.",
-    status: "Completed",
-    progress: 100,
-  },
-  {
-    id: 3,
-    name: "Task Management App",
-    description: "Organize tasks and track team progress.",
-    status: "On Hold",
-    progress: 35,
-  },
-];
 
 function Dashboard() {
+  const { projects }= useProjects();
   return (
     <div className="space-y-6">
       <div>
@@ -47,7 +27,7 @@ function Dashboard() {
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
         <div className="rounded-xl bg-white p-6 shadow-sm">
           <p className="text-sm text-slate-500">Total Projects</p>
-          <h3 className="mt-2 text-3xl font-bold text-indigo-600">12</h3>
+          <h3 className="mt-2 text-3xl font-bold text-indigo-600">{projects.length}</h3>
         </div>
 
         <div className="rounded-xl bg-white p-6 shadow-sm">
@@ -73,11 +53,11 @@ function Dashboard() {
         </div>
 
         <div className="space-y-5">
-          {projects.map((project) => (
-            <div
-              key={project.id}
-              className="rounded-lg border border-slate-200 p-4"
-            >
+          {projects.map((project) => {
+            const progress=getprogress(project.status);
+           return ( 
+           <div key={project.id}
+              className="rounded-lg border border-slate-200 p-4">
               <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
                 <div>
                   <h4 className="font-semibold text-slate-800">
@@ -105,7 +85,7 @@ function Dashboard() {
                 <div className="mb-2 flex justify-between text-sm">
                   <span className="text-slate-500">Progress</span>
                   <span className="font-medium text-slate-700">
-                    {project.progress}%
+                    {progress}%
                   </span>
                 </div>
 
@@ -118,12 +98,16 @@ function Dashboard() {
                           ? "bg-indigo-500"
                           : "bg-amber-500"
                     }`}
-                    style={{ width: `${project.progress}%` }}
+                    style={{ width: `${progress}%` }}
                   />
                 </div>
               </div>
             </div>
-          ))}
+           );
+})}
+          {projects.length===0 && (<p className="py-6 text-center text-sm text-slate-500">
+            No projects yet.Add your first project to get started!
+          </p>)}
         </div>
       </section>
     </div>
