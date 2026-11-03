@@ -39,10 +39,13 @@ function Sidebar() {
   <FolderKanban size={20} />
   Projects
 </NavLink>
-        <a href="#" className="flex items-center gap-3 rounded-lg px-4 py-3 text-slate-300 hover:bg-slate-800">
-          <CheckSquare size={20} />
-          My Tasks
-        </a>
+       <NavLink to="/mytasks" className={({ isActive }) =>`flex items-center gap-3 rounded-lg px-4 py-3 ${
+      isActive ? "bg-indigo-600 text-white" : "text-slate-300 hover:bg-slate-800" }`
+  }
+>
+  <CheckSquare size={20} />
+  My Tasks
+</NavLink>
 
         <a href="#" className="flex items-center gap-3 rounded-lg px-4 py-3 text-slate-300 hover:bg-slate-800">
           <Users size={20} />

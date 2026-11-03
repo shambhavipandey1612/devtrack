@@ -4,6 +4,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AppLayout from "./layout/applayout";
 import Dashboard from "./component/dashboard";
 import { ProjectProvider, useProjects, type Project } from "./context/projectcontext";
+import { TaskProvider } from "./context/taskcontext"; 
+import MyTasks from "./component/mytasks";
 
 function Projects() {
   const { projects, setProjects } = useProjects();
@@ -308,14 +310,17 @@ function Projects() {
 function App() {
   return (
     <ProjectProvider>
+      <TaskProvider>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<AppLayout />}>
             <Route index element={<Dashboard />} />
             <Route path="projects" element={<Projects />} />
+            <Route path="mytasks" element={<MyTasks />} />
           </Route>
         </Routes>
       </BrowserRouter>
+       </TaskProvider>
     </ProjectProvider>
   );
 }
