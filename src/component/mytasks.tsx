@@ -10,15 +10,19 @@ function MyTasks(){
     const [status, setStatus] = useState<"Todo" | "In Progress" | "Done">("Todo");
     const [dueDate, setDueDate] = useState("");
     const [editingTaskId, setEditingTaskId] = useState<number | null>(null);
+    const [searchTerm,setSearchTerm]=useState("");
+    const [statusFilter,setStatusFilter]=useState("All");
+    const [priorityFilter, setPriorityFilter]= useState("All");
+    const [sortOrder,setSortOrder] = useState("Earliest");
     const handleAddTask = (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
+   e.preventDefault();
 
-  if (!title.trim()) {
+   if (!title.trim()) {
     alert("Please enter a task title");
     return;
-  }
+   }
 
-  if (editingTaskId !== null) {
+   if (editingTaskId !== null) {
     setTasks((prevTasks) =>
       prevTasks.map((task) =>
         task.id === editingTaskId
@@ -73,6 +77,24 @@ const handleEditTask = (task: Task) => {
   setStatus(task.status);
   setDueDate(task.dueDate);
 };
+
+ const filteredTasks= tasks.filter((task)=>{
+ const matchesSearch=task.title.toLowerCase().includes(searchTerm.toLowerCase());
+ const matchesStatus=statusFilter==="All"|| task.status===statusFilter;
+ const matchesPriority= priorityFilter==="All"|| task.priority===priorityFilter;
+ return matchesSearch && matchesStatus && matchesPriority;
+ });
+
+ const sortedTasks = [...filteredTasks].sort((a, b) => {
+  if(!a.dueDate) return 1;
+  if(!b.dueDate) return -1;
+    if (sortOrder === "Earliest") {
+      return a.dueDate.localeCompare(b.dueDate);
+    }
+
+    return b.dueDate.localeCompare(a.dueDate);
+  });
+
     return (
         <div className="space-y-6">
             <div>
@@ -199,9 +221,38 @@ const handleEditTask = (task: Task) => {
       View and manage your tasks.
     </p>
   </div>
+   <input type="text" placeholder="Search tasks..."value={searchTerm}
+   onChange={(e)=>setSearchTerm(e.target.value)}
+   className="mb-4 w-full rounded-lg border border-slate-300 px-4 py-3 outline-none 
+   focus:border-indigo-500"/>
 
-  <div className="space-y-4">
-    {tasks.map((task) => (
+ <select value={statusFilter}onChange={(e)=>setStatusFilter(e.target.value)}
+ className="mb-4 w-full rounded-lg border border-slate-300 bg-white px-4 py-3
+ outline-none focus:border-indigo-500">
+        <option value="All">All Statuses</option>
+        <option value="Todo">Todo</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Done">Done</option>
+ </select>
+
+<select value={priorityFilter}onChange={(e)=>setPriorityFilter(e.target.value)}
+ className="mb-4 w-full rounded-lg border border-slate-300 bg-white px-4 py-3
+ outline-none focus:border-indigo-500">
+         <option value="All">All Priorities</option>
+         <option value="High">High</option>
+          <option value="Medium">Medium</option>
+          <option value="Low">Low</option>
+ </select>
+
+ <select value={sortOrder} onChange={(e)=>setSortOrder(e.target.value)}
+  className="mb-4 w-full rounded-lg border border-slate-300 bg-white px-4 py-3
+ outline-none focus:border-indigo-500">
+  <option value="Earliest">Due Date(Earliest First)</option>
+  <option value="Latest">Due Date(Latest First)</option>
+ </select>
+
+   <div className="space-y-4">
+    {sortedTasks.map((task) => (
       <div
         key={task.id}
         className="rounded-lg border border-slate-200 p-4"
