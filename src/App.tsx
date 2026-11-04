@@ -6,6 +6,7 @@ import Dashboard from "./component/dashboard";
 import { ProjectProvider, useProjects, type Project } from "./context/projectcontext";
 import { TaskProvider } from "./context/taskcontext"; 
 import MyTasks from "./component/mytasks";
+import Team from "./component/team";
 
 function Projects() {
   const { projects, setProjects } = useProjects();
@@ -317,6 +318,7 @@ function App() {
             <Route index element={<Dashboard />} />
             <Route path="projects" element={<Projects />} />
             <Route path="mytasks" element={<MyTasks />} />
+             <Route path="team" element={<Team />} />
           </Route>
         </Routes>
       </BrowserRouter>
