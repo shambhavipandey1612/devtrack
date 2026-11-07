@@ -7,6 +7,7 @@ import { ProjectProvider, useProjects, type Project } from "./context/projectcon
 import { TaskProvider } from "./context/taskcontext"; 
 import MyTasks from "./component/mytasks";
 import Team from "./component/team";
+import MemberProfile from "./component/memberprofile";
 
 function Projects() {
   const { projects, setProjects } = useProjects();
@@ -319,6 +320,7 @@ function App() {
             <Route path="projects" element={<Projects />} />
             <Route path="mytasks" element={<MyTasks />} />
              <Route path="team" element={<Team />} />
+             <Route path="team/:id" element={<MemberProfile />} />
           </Route>
         </Routes>
       </BrowserRouter>

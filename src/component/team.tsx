@@ -1,5 +1,7 @@
 
+
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 type TeamMember = {
   id: number;
@@ -287,8 +289,7 @@ const filteredMembers = members.filter((member) => {
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
         {filteredMembers.map((member) => (
-          <div
-            key={member.id}
+          <div key={member.id}
             className="rounded-xl bg-white p-6 shadow-sm" >
             <div className="flex items-center gap-4">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100 text-lg font-bold text-indigo-600">
@@ -327,6 +328,9 @@ const filteredMembers = members.filter((member) => {
            className="mr-2 mt-4 rounded-lg bg-indigo-50 px-4 py-2 text-sm font-medium text-indigo-600 hover:bg-indigo-100">
         Edit Member
          </button>
+         <Link to={`/team/${member.id}`} className="mt-4 inline-block rounded-lg bg-indigo-600 px-4 py-2 text-sm 
+       font-medium text-white hover:bg-indigo-700">View Profile</Link>
+
           </div>
         ))}
       </div>
