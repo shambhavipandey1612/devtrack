@@ -48,7 +48,7 @@ function Sidebar() {
 </NavLink>
 
         <NavLink to="/team" className={({ isActive })=>`flex items-center gap-3 rounded-lg px-3 py-2 ${
-          isActive ? "bg-indigo-50 text-indigo-600" : "text-slate-600 hover:bg-slate-100" }`
+          isActive ? "bg-indigo-600 text-white" : "text-slate-300 hover:bg-slate-800" }`
         }>
           <Users size={20} />
           Team

@@ -51,7 +51,11 @@ function Team() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"Active" | "Away">("Active");
   const [editingMemberId, setEditingMemberId] = useState<number | null>(null);
-
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [ sortOrder,setSortOrder ] = useState("asc");
+  
+  
   useEffect(()=>{
     localStorage.setItem("teamMembers", JSON.stringify(members));
   },[members]);
@@ -106,6 +110,26 @@ function handleAddMember(e: React.FormEvent<HTMLFormElement>) {
   setShowForm(true);
 }
 
+const totalMembers= members.length;
+  const activeMembers=members.filter((member)=>member.status==="Active").length;
+  const awayMembers=members.filter((member)=>member.status==="Away").length;
+
+const filteredMembers = members.filter((member) => {
+  const matchesSearch =
+    member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    member.role.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    member.email.toLowerCase().includes(searchTerm.toLowerCase());
+
+  const matchesStatus =
+    statusFilter === "All" || member.status === statusFilter;
+
+  return matchesSearch && matchesStatus;
+})
+.sort((a,b)=>{
+  return sortOrder==="asc"?a.name.localeCompare(b.name)
+  : b.name.localeCompare(a.name);
+});
+
   return (
     <div className="space-y-6">
        <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
@@ -117,10 +141,79 @@ function handleAddMember(e: React.FormEvent<HTMLFormElement>) {
   </div>
 
   <button
-    onClick={() => setShowForm(!showForm)}
+    onClick={() => { setShowForm(!showForm);
+      setEditingMemberId(null);
+      setName("");
+      setRole("");
+      setEmail("");
+      setStatus("Active");
+    }}
     className="rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-indigo-700">
     {showForm ? "Cancel" : "+ Add Member"} </button>
 </div>
+
+{/* Team Summary Cards */}
+<div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
+
+  {/* Total Members */}
+  <div className="rounded-xl bg-white p-6 shadow-sm">
+    <p className="text-sm text-slate-500">Total Members</p>
+    <h3 className="mt-2 text-3xl font-bold text-indigo-600">
+      {totalMembers}
+    </h3>
+  </div>
+
+  {/* Active Members */}
+  <div className="rounded-xl bg-white p-6 shadow-sm">
+    <p className="text-sm text-slate-500">Active Members</p>
+    <h3 className="mt-2 text-3xl font-bold text-emerald-600">
+      {activeMembers}
+    </h3>
+  </div>
+
+  {/* Away Members */}
+  <div className="rounded-xl bg-white p-6 shadow-sm">
+    <p className="text-sm text-slate-500">Away Members</p>
+    <h3 className="mt-2 text-3xl font-bold text-amber-600">
+      {awayMembers}
+    </h3>
+  </div>
+
+</div>
+
+{/* Search, Filter and Sort */}
+<div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+  {/* Search */}
+  <input
+    type="text"
+    value={searchTerm}
+    onChange={(e) => setSearchTerm(e.target.value)}
+    placeholder="Search by name, role or email..."
+    className="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 outline-none focus:border-indigo-500"
+  />
+
+  {/* Status Filter */}
+  <select
+    value={statusFilter}
+    onChange={(e) => setStatusFilter(e.target.value)}
+    className="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 outline-none focus:border-indigo-500"
+  >
+    <option value="All">All Members</option>
+    <option value="Active">Active</option>
+    <option value="Away">Away</option>
+  </select>
+
+  {/* Sorting */}
+  <select
+    value={sortOrder}
+    onChange={(e) => setSortOrder(e.target.value)}
+    className="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 outline-none focus:border-indigo-500"
+  >
+    <option value="asc">Name: A to Z</option>
+    <option value="desc">Name: Z to A</option>
+  </select>
+</div>
+
 
 {showForm && (
   <form
@@ -193,7 +286,7 @@ function handleAddMember(e: React.FormEvent<HTMLFormElement>) {
 )}
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
-        {members.map((member) => (
+        {filteredMembers.map((member) => (
           <div
             key={member.id}
             className="rounded-xl bg-white p-6 shadow-sm" >
