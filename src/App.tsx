@@ -8,6 +8,7 @@ import { TaskProvider } from "./context/taskcontext";
 import MyTasks from "./component/mytasks";
 import Team from "./component/team";
 import MemberProfile from "./component/memberprofile";
+import Settings from "./component/settings";
 
 function Projects() {
   const { projects, setProjects } = useProjects();
@@ -321,6 +322,7 @@ function App() {
             <Route path="mytasks" element={<MyTasks />} />
              <Route path="team" element={<Team />} />
              <Route path="team/:id" element={<MemberProfile />} />
+             <Route path="settings" element={<Settings />} />
           </Route>
         </Routes>
       </BrowserRouter>

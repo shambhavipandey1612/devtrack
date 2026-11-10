@@ -54,10 +54,12 @@ function Sidebar() {
           Team
         </NavLink>
 
-        <a href="#" className="flex items-center gap-3 rounded-lg px-4 py-3 text-slate-300 hover:bg-slate-800">
-          <Settings size={20} />
-          Settings
-        </a>
+        <NavLink to="/settings" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-colors ${
+      isActive? "bg-indigo-600 text-white" : "text-slate-300 hover:bg-slate-800"}`
+      }>
+      <Settings size={20} />
+      <span>Settings</span>
+      </NavLink>
       </nav>
     </aside>
   );
