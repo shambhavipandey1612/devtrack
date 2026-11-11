@@ -23,6 +23,11 @@ const [compactMode, setCompactMode]= useState(()=>{
     const saved = localStorage.getItem("compactMode");
     return saved !== null ? JSON.parse(saved) : false;
 });
+const [ showPasswordform ,setShowpasswordform ]= useState(false);
+const [ currentpassword, setCurrentpassword] = useState("");
+const [newpassword, setNewpassword]= useState("");
+const [confirmpassword, setConfirmpassword]= useState("");
+
 
 function handleSaveProfile() {
   const profile = { name, email, role };
@@ -38,6 +43,30 @@ useEffect(()=>{
 useEffect(()=>{
     localStorage.setItem("compactMode",  JSON.stringify(compactMode));
 },[compactMode]);
+
+function handlePasswordChange() {
+  if (!currentpassword || !newpassword || !confirmpassword) {
+    alert("Please fill in all fields.");
+    return;
+  }
+
+  if (newpassword.length < 8) {
+    alert("New password must be at least 8 characters long.");
+    return;
+  }
+
+  if (newpassword !== confirmpassword) {
+    alert("New passwords do not match.");
+    return;
+  }
+
+  alert("Password validation successful!");
+
+  setCurrentpassword("");
+  setNewpassword("");
+  setConfirmpassword("");
+  setShowpasswordform(false);
+}
   return (
     <div className="space-y-6">
       {/* Page Heading */}
@@ -54,8 +83,7 @@ useEffect(()=>{
       <p className="mt-1 text-sm text-slate-500">Manage your personal information.</p>
     </div>
 
-    <button
-      onClick={() => { if (isEditing) {
+    <button onClick={() => { if (isEditing) {
     handleSaveProfile();
      } else {
     setIsEditing(true);
@@ -76,13 +104,9 @@ useEffect(()=>{
 
     <div>
       <label className="mb-1 block text-sm font-medium text-slate-600">Email Address</label>
-      <input
-        type="email"
-        value={email}
-        disabled={!isEditing}
+      <input type="email" value={email} disabled={!isEditing}
         onChange={(e) => setEmail(e.target.value)}
-        className="w-full rounded-lg border border-slate-200 px-4 py-2 disabled:bg-slate-50"
-      />
+        className="w-full rounded-lg border border-slate-200 px-4 py-2 disabled:bg-slate-50"/>
     </div>
 
     <div>
@@ -130,6 +154,33 @@ useEffect(()=>{
         <h3 className="text-lg font-semibold text-slate-800">Account Settings</h3>
         <p className="mt-1 text-sm text-slate-500">Manage your account preferences.</p>
       </div>
+      <div className="mt-4">
+  <button
+    onClick={() => setShowpasswordform(!showPasswordform)}
+    className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">
+    {showPasswordform ? "Cancel" : "Change Password"}
+  </button>
+
+  {showPasswordform && (
+    <div className="mt-5 space-y-4">
+      <input type="password" placeholder="Current Password" value={currentpassword}
+        onChange={(e) => setCurrentpassword(e.target.value)}
+        className="w-full rounded-lg border p-3"/>
+
+      <input type="password" placeholder="New Password" value={newpassword}
+        onChange={(e) => setNewpassword(e.target.value)}
+        className="w-full rounded-lg border p-3"/>
+
+      <input type="password" placeholder="Confirm New Password" value={confirmpassword}
+        onChange={(e) => setConfirmpassword(e.target.value)}
+        className="w-full rounded-lg border p-3"/>
+         
+      <button onClick={handlePasswordChange}
+      className="rounded-lg bg-green-600 px-4 py-2 text-white hover:bg-green-700">
+     Update Password</button>
+    </div>
+     )}
+   </div>
     </div>
   );
 }

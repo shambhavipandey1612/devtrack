@@ -9,6 +9,7 @@ import MyTasks from "./component/mytasks";
 import Team from "./component/team";
 import MemberProfile from "./component/memberprofile";
 import Settings from "./component/settings";
+import { ThemeProvider } from "./context/themecontext";
 
 function Projects() {
   const { projects, setProjects } = useProjects();
@@ -312,6 +313,7 @@ function Projects() {
 
 function App() {
   return (
+    <ThemeProvider>
     <ProjectProvider>
       <TaskProvider>
       <BrowserRouter>
@@ -328,6 +330,7 @@ function App() {
       </BrowserRouter>
        </TaskProvider>
     </ProjectProvider>
+    </ThemeProvider>
   );
 }
 
