@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTheme } from "../context/themecontext";
 
 function Settings() {
 
@@ -27,6 +28,8 @@ const [ showPasswordform ,setShowpasswordform ]= useState(false);
 const [ currentpassword, setCurrentpassword] = useState("");
 const [newpassword, setNewpassword]= useState("");
 const [confirmpassword, setConfirmpassword]= useState("");
+
+const { theme,toggleTheme }= useTheme();
 
 
 function handleSaveProfile() {
@@ -146,8 +149,18 @@ function handlePasswordChange() {
       onChange={(e) => setCompactMode(e.target.checked)}
       className="h-5 w-5 cursor-pointer accent-blue-600"/>
    </div>
+   <div className="flex items-center justify-between">
+  <div>
+    <h3 className="font-medium text-gray-800">Appearance</h3>
+    <p className="text-sm text-gray-500">Switch between light and dark mode.</p>
+  </div>
+  <button onClick={toggleTheme} className="rounded-lg bg-gray-800 px-4 py-2 text-white">
+    {theme==="light" ? "Dark Mode":"Light Mode"}
+  </button>
+</div>
 </div>
       </div>
+
 
       {/* Account Settings */}
       <div className="rounded-xl bg-white p-6 shadow-sm">

@@ -1,5 +1,43 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 .dark body {
     background-color: #111827;
-    color: #f9fafb;
+    color: white;
+}
+.dark #root {
+    background-color: #111827;
+    min-height: 100vh;
+}
+ .dark .bg-white {
+    background-color: #1f2937;
+ }
+ .dark .bg-slate-50{
+    background-color: #111827;
+ }
+  .dark .text-slate-800, .dark .text-gray-800 {
+    color: white;
+  }
+   .dark .text-slate-500, .dark .text-gray-500 {
+    color: white;
+   }
+.dark input,
+.dark textarea,
+.dark select {
+    background-color: #374151 !important;
+    color: #ffffff !important;
+    border-color: #6b7280 !important;
+    -webkit-text-fill-color: #ffffff;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+    color: #d1d5db !important;
+    opacity: 1;
+}
+
+.dark input:disabled {
+    background-color: #374151 !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff;
+    opacity: 1;
 }

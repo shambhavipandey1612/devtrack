@@ -21,12 +21,16 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     );
   }
 
-  return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>{children}</ThemeContext.Provider>
-  );
+  // Apply theme to HTML element
   useEffect(() => {
-  document.documentElement.classList.toggle("dark", theme === "dark");
-}, [theme]);
+    document.documentElement.classList.toggle("dark", theme === "dark");
+  }, [theme]);
+
+  return (
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
 }
 
 export function useTheme() {
