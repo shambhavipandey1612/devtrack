@@ -154,7 +154,9 @@ function handlePasswordChange() {
     <h3 className="font-medium text-gray-800">Appearance</h3>
     <p className="text-sm text-gray-500">Switch between light and dark mode.</p>
   </div>
-  <button onClick={toggleTheme} className="rounded-lg bg-gray-800 px-4 py-2 text-white">
+  <button onClick={toggleTheme} className="bg-gray-900 text-white hover:bg-gray-800 dark:bg-gray-600
+  dark:text-white dark:hover:bg-gray-500 border border-gray-700
+  dark:border-gray-500 rounded-lg  px-4 py-2 text-white transition-colors">
     {theme==="light" ? "Dark Mode":"Light Mode"}
   </button>
 </div>

@@ -12,7 +12,7 @@ function Topbar() {
       {/* Right side: Search and profile */}
       <div className="flex items-center gap-5">
         {/* Search */}
-        <div className="flex items-center gap-2 rounded-lg bg-slate-100 px-3 py-2">
+        <div className="flex items-center gap-2 rounded-lg bg-slate-100 px-3 py-2 dark:bg-gray-700">
           <Search size={18} className="text-slate-500" />
           <input type="text" placeholder="Search..."
             className="w-36 bg-transparent text-sm outline-none dark:bg-gray-700
