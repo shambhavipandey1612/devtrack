@@ -1,5 +1,5 @@
 
-import { LayoutDashboard, FolderKanban, CheckSquare, Users, Settings } from "lucide-react";
+import { LayoutDashboard, FolderKanban, CheckSquare, Users, Settings ,KanbanSquare } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
 function Sidebar() {
@@ -39,7 +39,18 @@ function Sidebar() {
   <FolderKanban size={20} />
   Projects
 </NavLink>
-       <NavLink to="/mytasks" className={({ isActive }) =>`flex items-center gap-3 rounded-lg px-4 py-3 ${
+<NavLink to="/kanban"className={({ isActive }) =>`flex items-center gap-3 rounded-lg px-4 py-3 
+transition-colors ${
+      isActive
+        ? "bg-indigo-600 text-white": "text-slate-300 hover:bg-slate-800"
+    }`
+  }
+>
+  <KanbanSquare size={20} />
+  <span>Kanban Board</span>
+</NavLink>
+
+<NavLink to="/mytasks" className={({ isActive }) =>`flex items-center gap-3 rounded-lg px-4 py-3 ${
       isActive ? "bg-indigo-600 text-white" : "text-slate-300 hover:bg-slate-800" }`
   }
 >
@@ -47,7 +58,7 @@ function Sidebar() {
   My Tasks
 </NavLink>
 
-        <NavLink to="/team" className={({ isActive })=>`flex items-center gap-3 rounded-lg px-3 py-2 ${
+<NavLink to="/team" className={({ isActive })=>`flex items-center gap-3 rounded-lg px-3 py-2 ${
           isActive ? "bg-indigo-600 text-white" : "text-slate-300 hover:bg-slate-800" }`
         }>
           <Users size={20} />

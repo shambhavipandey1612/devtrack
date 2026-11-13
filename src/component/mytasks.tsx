@@ -7,7 +7,7 @@ function MyTasks(){
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [priority, setPriority] = useState<"High" | "Medium" | "Low">("Medium");
-    const [status, setStatus] = useState<"Todo" | "In Progress" | "Done">("Todo");
+    const [status, setStatus] = useState<"Todo" | "In Progress"| "Review" | "Done">("Todo");
     const [dueDate, setDueDate] = useState("");
     const [editingTaskId, setEditingTaskId] = useState<number | null>(null);
     const [searchTerm,setSearchTerm]=useState("");
@@ -163,12 +163,13 @@ const handleEditTask = (task: Task) => {
         <select
           value={status}
           onChange={(e) =>
-            setStatus(e.target.value as "Todo" | "In Progress" | "Done")
+            setStatus(e.target.value as "Todo" | "In Progress" | "Review" | "Done")
           }
           className="w-full rounded-lg border border-slate-300 px-4 py-2"
         >
           <option value="Todo">Todo</option>
           <option value="In Progress">In Progress</option>
+          <option value="Review">Review</option>
           <option value="Done">Done</option>
         </select>
       </div>

@@ -6,7 +6,7 @@ export type Task={
   title: string;
   description: string;
   priority:"High"|"Medium"|"Low";
-  status: "Todo" | "In Progress" | "Done";
+  status: "Todo" | "In Progress" |"Review" | "Done";
   dueDate:string;
 };
 type TaskContextType={
