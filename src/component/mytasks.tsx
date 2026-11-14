@@ -1,9 +1,12 @@
 
 import{ useState } from "react";
 import { useTasks,type Task } from "../context/taskcontext";
+import { useToast } from "../context/toastcontext";
 
 function MyTasks(){
     const{ tasks,setTasks }= useTasks();
+   const { showToast } = useToast();
+
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [priority, setPriority] = useState<"High" | "Medium" | "Low">("Medium");
@@ -18,7 +21,7 @@ function MyTasks(){
    e.preventDefault();
 
    if (!title.trim()) {
-    alert("Please enter a task title");
+    showToast("Please enter a task title","error");
     return;
    }
 
@@ -39,6 +42,7 @@ function MyTasks(){
     );
 
     setEditingTaskId(null);
+    showToast("Task updated successfully!","success");
   } else {
     const newTask: Task = {
       id: Date.now(),
@@ -50,6 +54,7 @@ function MyTasks(){
     };
 
     setTasks((prevTasks) => [...prevTasks, newTask]);
+    showToast("Task added successfully!","success");
   }
 
   setTitle("");
@@ -67,6 +72,7 @@ function MyTasks(){
     setTasks((prevTasks) =>
       prevTasks.filter((task) => task.id !== id)
     );
+    showToast("Task deleted successfully!","success");
   }
 };
 const handleEditTask = (task: Task) => {

@@ -98,6 +98,7 @@ function Projects() {
       setProjects((prevProjects) =>
         prevProjects.filter((project) => project.id !== id)
       );
+      showToast("Project deleted successfully!","success")
     }
   };
 

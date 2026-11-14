@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useToast } from "../context/toastcontext";
 
 type TeamMember = {
   id: number;
@@ -47,6 +48,7 @@ function Team() {
     const savedMembers = localStorage.getItem("teamMembers");
     return savedMembers? JSON.parse(savedMembers) : teamMembers;
   });
+  const { showToast } = useToast();
   const [showForm, setShowForm] = useState(false);
   const [name, setName] = useState("");
   const [role, setRole] = useState("");
@@ -73,6 +75,7 @@ function handleAddMember(e: React.FormEvent<HTMLFormElement>) {
           : member
       )
     );
+    showToast("Team member updated successfully","success");
   } else {
     // Add new member
     const newMember: TeamMember = {
@@ -84,6 +87,7 @@ function handleAddMember(e: React.FormEvent<HTMLFormElement>) {
     };
 
     setMembers((prevMembers) => [...prevMembers, newMember]);
+    showToast("Team member added successfully!","success");
   }
 
   // Reset form
@@ -100,6 +104,7 @@ function handleAddMember(e: React.FormEvent<HTMLFormElement>) {
     if(confirmDelete){
       setMembers((prevMembers)=> prevMembers.filter((member)=>
       member.id!==id));
+      showToast("Team member deleted successfully!","success");
     }
   }
 
