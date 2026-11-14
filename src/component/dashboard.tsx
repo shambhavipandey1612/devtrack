@@ -22,6 +22,7 @@ function Dashboard() {
       const recentTasks = [...tasks].sort((a,b)=>b.id-a.id).slice(0,5);
 
 
+
   return (
     <div className="space-y-6">
       <div>
@@ -32,6 +33,7 @@ function Dashboard() {
           Here's what's happening with your projects.
         </p>
       </div>
+
 
       {/* Summary cards */}
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">

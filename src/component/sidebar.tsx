@@ -1,78 +1,100 @@
 
-import { LayoutDashboard, FolderKanban, CheckSquare, Users, Settings ,KanbanSquare } from "lucide-react";
+
+import { useState } from "react";
+import {
+  LayoutDashboard,
+  FolderKanban,
+  CheckSquare,
+  Users,
+  Settings,
+  KanbanSquare,
+  Menu,
+  X,
+} from "lucide-react";
 import { NavLink } from "react-router-dom";
 
 function Sidebar() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const navLinkClass = ({ isActive }: { isActive: boolean }) =>
+    `flex items-center gap-3 rounded-lg px-4 py-3 transition-colors ${
+      isActive
+        ? "bg-indigo-600 text-white"
+        : "text-slate-300 hover:bg-slate-800"
+    }`;
+
   return (
-    <aside className="flex min-h-screen w-64 flex-col bg-slate-900 p-5 text-white">
-      <h1 className="mb-10 text-2xl font-bold">
-        Dev<span className="text-indigo-400">Track</span>
-      </h1>
+    <>
+      {/* Mobile menu button */}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="fixed left-4 top-4 z-50 rounded-lg bg-slate-900 p-2 text-white md:hidden"
+        aria-label="Toggle sidebar"
+      >
+        {isOpen ? <X size={24} /> : <Menu size={24} />}
+      </button>
 
-      <nav className="flex flex-col gap-3">
-        
-<NavLink
-  to="/"
-  end
-  className={({ isActive }) =>
-    `flex items-center gap-3 rounded-lg px-4 py-3 ${
-      isActive
-        ? "bg-indigo-600 text-white"
-        : "text-slate-300 hover:bg-slate-800"
-    }`
-  }
->
-  <LayoutDashboard size={20} />
-  Dashboard
-</NavLink>
-        
-<NavLink
-  to="/projects"
-  className={({ isActive }) =>
-    `flex items-center gap-3 rounded-lg px-4 py-3 ${
-      isActive
-        ? "bg-indigo-600 text-white"
-        : "text-slate-300 hover:bg-slate-800"
-    }`
-  }
->
-  <FolderKanban size={20} />
-  Projects
-</NavLink>
-<NavLink to="/kanban"className={({ isActive }) =>`flex items-center gap-3 rounded-lg px-4 py-3 
-transition-colors ${
-      isActive
-        ? "bg-indigo-600 text-white": "text-slate-300 hover:bg-slate-800"
-    }`
-  }
->
-  <KanbanSquare size={20} />
-  <span>Kanban Board</span>
-</NavLink>
+      {/* Mobile overlay */}
+      {isOpen && (
+        <div
+          onClick={() => setIsOpen(false)}
+          className="fixed inset-0 z-30 bg-black/50 md:hidden"
+        />
+      )}
 
-<NavLink to="/mytasks" className={({ isActive }) =>`flex items-center gap-3 rounded-lg px-4 py-3 ${
-      isActive ? "bg-indigo-600 text-white" : "text-slate-300 hover:bg-slate-800" }`
-  }
->
-  <CheckSquare size={20} />
-  My Tasks
-</NavLink>
+      {/* Sidebar */}
+      <aside
+        className={`fixed inset-y-0 left-0 z-40 flex min-h-screen w-64 flex-col bg-slate-900 p-5 text-white transition-transform duration-300 md:static md:translate-x-0 ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <div className="mb-10 flex items-center justify-between">
+          <h1 className="text-2xl font-bold">
+            Dev<span className="text-indigo-400">Track</span>
+          </h1>
 
-<NavLink to="/team" className={({ isActive })=>`flex items-center gap-3 rounded-lg px-3 py-2 ${
-          isActive ? "bg-indigo-600 text-white" : "text-slate-300 hover:bg-slate-800" }`
-        }>
-          <Users size={20} />
-          Team
-        </NavLink>
+          <button
+            onClick={() => setIsOpen(false)}
+            className="md:hidden"
+            aria-label="Close sidebar"
+          >
+            <X size={22} />
+          </button>
+        </div>
 
-        <NavLink to="/settings" className={({ isActive }) => `flex items-center gap-3 rounded-lg px-3 py-2 transition-colors ${
-      isActive? "bg-indigo-600 text-white" : "text-slate-300 hover:bg-slate-800"}`
-      }>
-      <Settings size={20} />
-      <span>Settings</span>
-      </NavLink>
-      </nav>
-    </aside>
+        <nav className="flex flex-col gap-3">
+          <NavLink to="/" end className={navLinkClass} onClick={() => setIsOpen(false)}>
+            <LayoutDashboard size={20} />
+            Dashboard
+          </NavLink>
+
+          <NavLink to="/projects" className={navLinkClass} onClick={() => setIsOpen(false)}>
+            <FolderKanban size={20} />
+            Projects
+          </NavLink>
+
+          <NavLink to="/kanban" className={navLinkClass} onClick={() => setIsOpen(false)}>
+            <KanbanSquare size={20} />
+            Kanban Board
+          </NavLink>
+
+          <NavLink to="/mytasks" className={navLinkClass} onClick={() => setIsOpen(false)}>
+            <CheckSquare size={20} />
+            My Tasks
+          </NavLink>
+
+          <NavLink to="/team" className={navLinkClass} onClick={() => setIsOpen(false)}>
+            <Users size={20} />
+            Team
+          </NavLink>
+
+          <NavLink to="/settings" className={navLinkClass} onClick={() => setIsOpen(false)}>
+            <Settings size={20} />
+            Settings
+          </NavLink>
+        </nav>
+      </aside>
+    </>
   );
 }
 

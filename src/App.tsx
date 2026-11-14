@@ -11,9 +11,11 @@ import MemberProfile from "./component/memberprofile";
 import Settings from "./component/settings";
 import { ThemeProvider } from "./context/themecontext";
 import Kanban from "./component/kanban";
+import { useToast } from "./context/toastcontext";
 
 function Projects() {
   const { projects, setProjects } = useProjects();
+  const { showToast } = useToast();
 
   const [showForm, setShowForm] = useState(false);
   const [projectName, setProjectName] = useState("");
@@ -41,7 +43,7 @@ function Projects() {
   // Add or Update Project
   const handleAddProject = () => {
     if (!projectName.trim() || !description.trim()) {
-      alert("Please fill in all fields");
+      showToast("Please fill in all fields","error");
       return;
     }
 
@@ -71,7 +73,9 @@ function Projects() {
         newProject,
       ]);
     }
-
+   showToast(
+  editingProjectId !== null
+    ? "Project updated successfully!": "Project added successfully!","success");
     resetForm();
   };
 
