@@ -31,6 +31,9 @@ function Projects() {
   const [editingProjectId, setEditingProjectId] =
     useState<number | null>(null);
 
+  const [projectToDelete,setProjectToDelete]= 
+  useState<number | null>(null);
+
   // Reset Form
   const resetForm = () => {
     setProjectName("");
@@ -86,21 +89,24 @@ function Projects() {
     setDescription(project.description);
     setStatus(project.status);
     setShowForm(true);
-  };
+  }
+  
+ // Delete Project
+const handleDeleteProject = (id: number) => {
+  setProjectToDelete(id);
+};
 
-  // Delete Project
-  const handleDeleteProject = (id: number) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this project?"
-    );
+// Confirm Project Deletion
+const confirmDeleteProject = () => {
+  if (projectToDelete === null) return;
 
-    if (confirmDelete) {
-      setProjects((prevProjects) =>
-        prevProjects.filter((project) => project.id !== id)
-      );
-      showToast("Project deleted successfully!","success")
-    }
-  };
+  setProjects((prevProjects) =>
+    prevProjects.filter((project) => project.id !== projectToDelete)
+  );
+
+  showToast("Project deleted successfully!", "success");
+  setProjectToDelete(null);
+};
 
   // Search and Status Filter
   const filteredProjects = projects.filter((project) => {
@@ -128,13 +134,9 @@ function Projects() {
       {/* Page Header */}
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-slate-800">
-            All Projects
-          </h2>
+          <h2 className="text-2xl font-bold text-slate-800">All Projects</h2>
 
-          <p className="mt-1 text-slate-500">
-            Manage your development projects.
-          </p>
+          <p className="mt-1 text-slate-500">Manage your development projects.</p>
         </div>
 
         <button
@@ -313,6 +315,27 @@ function Projects() {
           No projects found. Try another search or filter!
         </p>
       )}
+
+      {projectToDelete !== null && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+    <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl dark:bg-gray-800">
+      <h3 className="text-lg font-semibold text-slate-800 dark:text-white">Delete Project?</h3>
+
+      <p className="mt-2 text-sm text-slate-600 dark:text-gray-300">
+        Are you sure you want to delete this project? This action cannot be undone.</p>
+
+      <div className="mt-6 flex justify-end gap-3">
+        <button onClick={() => setProjectToDelete(null)}
+          className="rounded-lg border border-slate-300 px-4 py-2 text-sm text-slate-700 
+          hover:bg-slate-50 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700">Cancel</button>
+
+        <button  onClick={confirmDeleteProject}
+          className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700">
+          Delete</button>
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 }

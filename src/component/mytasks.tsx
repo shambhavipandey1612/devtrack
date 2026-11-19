@@ -17,6 +17,8 @@ function MyTasks(){
     const [statusFilter,setStatusFilter]=useState("All");
     const [priorityFilter, setPriorityFilter]= useState("All");
     const [sortOrder,setSortOrder] = useState("Earliest");
+
+    const [taskToDelete, setTaskToDelete] = useState<number | null>(null);
     const handleAddTask = (e: React.FormEvent<HTMLFormElement>) => {
    e.preventDefault();
 
@@ -63,17 +65,21 @@ function MyTasks(){
   setStatus("Todo");
   setDueDate("");
 };
-    const handleDeleteTask = (id: number) => {
-  const confirmDelete = window.confirm(
-    "Are you sure you want to delete this task?"
+    // Open delete confirmation modal
+const handleDeleteTask = (id: number) => {
+  setTaskToDelete(id);
+};
+
+// Confirm task deletion
+const confirmDeleteTask = () => {
+  if (taskToDelete === null) return;
+
+  setTasks((prevTasks) =>
+    prevTasks.filter((task) => task.id !== taskToDelete)
   );
 
-  if (confirmDelete) {
-    setTasks((prevTasks) =>
-      prevTasks.filter((task) => task.id !== id)
-    );
-    showToast("Task deleted successfully!","success");
-  }
+  showToast("Task deleted successfully!", "success");
+  setTaskToDelete(null);
 };
 const handleEditTask = (task: Task) => {
   setEditingTaskId(task.id);
@@ -183,9 +189,7 @@ const handleEditTask = (task: Task) => {
 
     {/* Due Date */}
     <div>
-      <label className="mb-1 block text-sm font-medium text-slate-700">
-        Due Date
-      </label>
+      <label className="mb-1 block text-sm font-medium text-slate-700">Due Date</label>
       <input
         type="date"
         value={dueDate}
@@ -202,9 +206,7 @@ const handleEditTask = (task: Task) => {
     </button>
   </form>
   {editingTaskId !== null && (
-  <button
-    type="button"
-    onClick={() => {
+  <button type="button" onClick={() => {
       setEditingTaskId(null);
       setTitle("");
       setDescription("");
@@ -212,8 +214,7 @@ const handleEditTask = (task: Task) => {
       setStatus("Todo");
       setDueDate("");
     }}
-    className="ml-3 rounded-lg border border-slate-300 px-5 py-2.5 text-slate-600 hover:bg-slate-50"
-  >
+    className="ml-3 rounded-lg border border-slate-300 px-5 py-2.5 text-slate-600 hover:bg-slate-50">
     Cancel Edit
   </button>
 )}
@@ -221,12 +222,8 @@ const handleEditTask = (task: Task) => {
 {/* Task List */}
 <section className="rounded-xl bg-white p-6 shadow-sm">
   <div className="mb-5">
-    <h3 className="text-lg font-semibold text-slate-800">
-      All Tasks
-    </h3>
-    <p className="mt-1 text-sm text-slate-500">
-      View and manage your tasks.
-    </p>
+    <h3 className="text-lg font-semibold text-slate-800">All Tasks</h3>
+    <p className="mt-1 text-sm text-slate-500">View and manage your tasks.</p>
   </div>
    <input type="text" placeholder="Search tasks..."value={searchTerm}
    onChange={(e)=>setSearchTerm(e.target.value)}
@@ -262,17 +259,12 @@ const handleEditTask = (task: Task) => {
     {sortedTasks.map((task) => (
       <div
         key={task.id}
-        className="rounded-lg border border-slate-200 p-4"
-      >
+        className="rounded-lg border border-slate-200 p-4">
         <div className="flex flex-col justify-between gap-3 sm:flex-row">
           <div>
-            <h4 className="font-semibold text-slate-800">
-              {task.title}
-            </h4>
+            <h4 className="font-semibold text-slate-800">{task.title}</h4>
 
-            <p className="mt-1 text-sm text-slate-500">
-              {task.description}
-            </p>
+            <p className="mt-1 text-sm text-slate-500">{task.description}</p>
           </div>
 
           <div className="flex flex-wrap gap-2">
@@ -286,17 +278,13 @@ const handleEditTask = (task: Task) => {
           </div>
         </div>
 
-        <p className="mt-3 text-sm text-slate-500">
-          Due Date: {task.dueDate || "No deadline"}
-        </p>
-        <button
-  onClick={() => handleEditTask(task)}
-  className="mt-3 mr-2 rounded-lg bg-blue-100 px-4 py-2 text-sm font-medium text-blue-600 hover:bg-blue-200"
->Edit</button>
-        <button
-  onClick={() => handleDeleteTask(task.id)}
-  className="mt-3 rounded-lg bg-red-100 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-200"
->Delete</button>
+        <p className="mt-3 text-sm text-slate-500">Due Date: {task.dueDate || "No deadline"}</p>
+        <button onClick={() => handleEditTask(task)}
+         className="mt-3 mr-2 rounded-lg bg-blue-100 px-4 py-2 text-sm font-medium text-blue-600
+          hover:bg-blue-200">Edit</button>
+        <button onClick={() => handleDeleteTask(task.id)}
+         className="mt-3 rounded-lg bg-red-100 px-4 py-2 text-sm font-medium text-red-600 
+         hover:bg-red-200">Delete</button>
       </div>
     ))}
 
@@ -307,6 +295,30 @@ const handleEditTask = (task: Task) => {
     )}
   </div>
 </section>
+
+{taskToDelete !== null && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+    <div className="w-full max-w-sm rounded-xl bg-white p-6 shadow-xl dark:bg-gray-800">
+      <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Delete Task?</h2>
+
+      <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
+        Are you sure you want to delete this task? This action cannot be undone.
+      </p>
+
+      <div className="mt-6 flex justify-end gap-3">
+        <button onClick={() => setTaskToDelete(null)}
+          className="rounded-lg border border-gray-300 px-4 py-2 text-sm dark:border-gray-600 dark:text-white">
+          Cancel
+        </button>
+
+        <button onClick={confirmDeleteTask}
+          className="rounded-lg bg-red-600 px-4 py-2 text-sm text-white hover:bg-red-700">
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+)}
         </div>
     );
 }
