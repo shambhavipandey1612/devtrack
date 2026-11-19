@@ -3,6 +3,7 @@ import { useTasks, type Task } from "../context/taskcontext";
 import { DndContext, useDraggable, useDroppable, type DragEndEvent,
 } from "@dnd-kit/core";
 import type { ReactNode } from "react";
+import { useToast } from "../context/toastcontext";
 
 function DraggableTask({ task }: { task: Task }) {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
@@ -55,6 +56,7 @@ function DroppableColumn({
 
 function Kanban() {
   const { tasks, setTasks } = useTasks();
+  const { showToast } = useToast();
 
   const columns = ["Todo", "In Progress", "Review", "Done"];
 
@@ -66,6 +68,10 @@ function Kanban() {
 
     const taskId = active.id;
     const newStatus = String(over.id);
+    const currentTask=tasks.find((task)=>
+    String(task.id)==String(taskId));
+
+    if(!currentTask || currentTask.status===newStatus) return;
 
     // Update the task's status
     setTasks((previousTasks) =>
@@ -74,6 +80,9 @@ function Kanban() {
           ? { ...task, status: newStatus as Task["status"] }
           : task
       )
+    );
+    showToast(newStatus==="Done"? "Task completed successfully!"
+      : `Task moved to ${newStatus}!`,"success"
     );
   }
 

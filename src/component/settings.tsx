@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from "react";
 import { useTheme } from "../context/themecontext";
+import { useToast } from "../context/toastcontext";
 
 function Settings() {
   const [name, setName] = useState(() => {
@@ -36,11 +37,13 @@ function Settings() {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const { theme, toggleTheme } = useTheme();
+  const { showToast } = useToast();
 
   function handleSaveProfile() {
     const profile = { name, email, role };
     localStorage.setItem("userProfile", JSON.stringify(profile));
     setIsEditing(false);
+    showToast("Profile updated successfully!", "success");
   }
 
   useEffect(() => {
@@ -53,21 +56,21 @@ function Settings() {
 
   function handlePasswordChange() {
     if (!currentPassword || !newPassword || !confirmPassword) {
-      alert("Please fill in all fields.");
+      showToast("Please fill in all fields.","error");
       return;
     }
 
     if (newPassword.length < 8) {
-      alert("New password must be at least 8 characters long.");
+      showToast("Password must be at least 8 characters!","error");
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      alert("New passwords do not match.");
+      showToast("New passwords do not match!","error");
       return;
     }
 
-    alert("Password validation successful!");
+    showToast("Password validation successful!","success");
 
     setCurrentPassword("");
     setNewPassword("");
@@ -179,7 +182,13 @@ function Settings() {
             <input
               type="checkbox"
               checked={emailNotifications}
-              onChange={(e) => setEmailNotifications(e.target.checked)}
+              onChange={(e) => {
+                setEmailNotifications(e.target.checked);
+                showToast(
+                  e.target.checked ? "Email notification enabled!"
+                  :"Email notification disabled!","info"
+                );
+              }}
               className="h-5 w-5 cursor-pointer accent-blue-600"
             />
           </div>
@@ -198,7 +207,12 @@ function Settings() {
             <input
               type="checkbox"
               checked={compactMode}
-              onChange={(e) => setCompactMode(e.target.checked)}
+              onChange={(e) => {
+             setCompactMode(e.target.checked);
+            showToast(e.target.checked
+              ? "Compact mode enabled!":"Compact mode disabled!","info"
+             );
+              }}
               className="h-5 w-5 cursor-pointer accent-blue-600"
             />
           </div>
