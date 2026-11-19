@@ -58,6 +58,7 @@ function Team() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
   const [ sortOrder,setSortOrder ] = useState("asc");
+  const [ memberToDelete,setMemberToDelete ]= useState<number | null>(null); 
   
   
   useEffect(()=>{
@@ -99,14 +100,18 @@ function handleAddMember(e: React.FormEvent<HTMLFormElement>) {
   setShowForm(false);
 }
 
-  function handleDeleteMember(id:number){
-    const confirmDelete= window.confirm("Are you sure you want to delete this member?");
-    if(confirmDelete){
+  const handleDeleteMember = (id:number)=>{
+    setMemberToDelete(id);
+  };
+    const confirmDeleteMember = ()=>{
+      if(memberToDelete=== null) return;
+
       setMembers((prevMembers)=> prevMembers.filter((member)=>
-      member.id!==id));
+      member.id!==memberToDelete));
       showToast("Team member deleted successfully!","success");
-    }
-  }
+      setMemberToDelete(null);
+    };
+  
 
   function handleEditMember(member: TeamMember) {
   setName(member.name);
@@ -260,22 +265,15 @@ const filteredMembers = members.filter((member) => {
       <label className="mb-1 block text-sm font-medium text-slate-600">
         Email
       </label>
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
+      <input type="email" value={email} onChange={(e) => setEmail(e.target.value)}
         placeholder="Enter email address"
         required
         className="w-full rounded-lg border border-slate-200 px-4 py-2 outline-none focus:border-indigo-500" />
     </div>
 
     <div>
-      <label className="mb-1 block text-sm font-medium text-slate-600">
-        Status
-      </label>
-      <select
-        value={status}
-        onChange={(e) =>
+      <label className="mb-1 block text-sm font-medium text-slate-600">Status</label>
+      <select value={status} onChange={(e) =>
           setStatus(e.target.value as "Active" | "Away")
         }
         className="w-full rounded-lg border border-slate-200 px-4 py-2 outline-none focus:border-indigo-500">
@@ -284,8 +282,7 @@ const filteredMembers = members.filter((member) => {
       </select>
     </div>
 
-    <button
-      type="submit"
+    <button type="submit"
       className="rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-indigo-700">
         {editingMemberId !== null ? "Update Member" : "Add Team Member"}
     </button>
@@ -302,18 +299,12 @@ const filteredMembers = members.filter((member) => {
               </div>
 
               <div>
-                <h3 className="font-semibold text-slate-800">
-                  {member.name}
-                </h3>
-                <p className="text-sm text-slate-500">
-                  {member.role}
-                </p>
+                <h3 className="font-semibold text-slate-800">{member.name}</h3>
+                <p className="text-sm text-slate-500">{member.role}</p>
               </div>
             </div>
 
-            <p className="mt-5 text-sm text-slate-600">
-              {member.email}
-            </p>
+            <p className="mt-5 text-sm text-slate-600">{member.email}</p>
 
             <div className="mt-4">
               <span
@@ -339,6 +330,30 @@ const filteredMembers = members.filter((member) => {
           </div>
         ))}
       </div>
+
+      {memberToDelete !== null && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+    <div className="w-full max-w-sm rounded-xl bg-white p-6 shadow-xl dark:bg-gray-800">
+      <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Delete Team Member?</h2>
+
+      <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
+        Are you sure you want to delete this team member?
+      </p>
+
+      <div className="mt-6 flex justify-end gap-3">
+        <button onClick={() => setMemberToDelete(null)}
+          className="rounded-lg border border-gray-300 px-4 py-2 dark:border-gray-600 dark:text-white">
+          Cancel
+        </button>
+
+        <button onClick={confirmDeleteMember}
+          className="rounded-lg bg-red-600 px-4 py-2 text-white hover:bg-red-700">
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 }
