@@ -1,9 +1,22 @@
 
 import { Search, Bell, UserRound } from "lucide-react";
 import { useLocation } from "react-router-dom";
+import { useState } from "react";
 
 function Topbar() {
   const location = useLocation();
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [profile, setProfile] = useState(() => {
+  const savedProfile = localStorage.getItem("userProfile");
+
+  return savedProfile
+    ? JSON.parse(savedProfile)
+    : {
+        name: "Shambhavi",
+        email: "",
+        role: "Developer",
+      };
+});
 
   const pageTitles: Record<string, string> = {
     "/": "Dashboard",
@@ -45,9 +58,55 @@ function Topbar() {
         </button>
 
         {/* Profile */}
-        <button className="flex items-center justify-center rounded-full bg-indigo-100 p-2 text-indigo-700">
-          <UserRound size={20} />
+        <div className="relative">
+        <button  onClick={() => setIsProfileOpen(!isProfileOpen)}
+         className="flex items-center justify-center rounded-full bg-indigo-100 p-2 text-indigo-700
+         hover:bg-indigo-200"><UserRound size={20} />
         </button>
+        {isProfileOpen && (
+          <div className="absolute right-0 top-12 z-50 w-48 rounded-lg border border-slate-200 bg-white p-2 
+          shadow-lg dark:border-gray-700 dark:bg-gray-800">
+         <div className="px-3 py-2">
+        <p className="truncate text-sm font-semibold text-slate-800 dark:text-white">{profile.name}</p>
+
+  <p className="truncate text-xs text-slate-500 dark:text-gray-400">
+    {profile.email}
+  </p>
+
+  <p className="mt-1 text-xs text-indigo-600 dark:text-indigo-400">
+    {profile.role}
+  </p>
+</div>   
+        <div className="my-1 border-t border-slate-200 dark:border-gray-700" />
+
+      <button onClick={() => {
+          window.location.href = "/settings";
+          setIsProfileOpen(false);
+        }}
+        className="w-full rounded-md px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-100 dark:text-gray-200 
+        dark:hover:bg-gray-700">
+        My Profile
+      </button>
+
+      <button onClick={() => {
+          window.location.href = "/settings";
+          setIsProfileOpen(false);
+        }}
+        className="w-full rounded-md px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-100 dark:text-gray-200 
+        dark:hover:bg-gray-700">
+        Settings
+      </button>
+
+      <div className="my-1 border-t border-slate-200 dark:border-gray-700" />
+
+      <button onClick={() => setIsProfileOpen(false)}
+        className="w-full rounded-md px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50 dark:hover:bg-gray-700">
+        Logout (Demo)
+      </button>
+    </div>
+        
+        )}
+        </div>
 
       </div>
     </header>
