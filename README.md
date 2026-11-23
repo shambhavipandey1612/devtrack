@@ -1,78 +1,115 @@
-# React + TypeScript + Vite
+# DevTrack – Developer Project Management Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A responsive project management dashboard built with React, TypeScript, and Tailwind CSS. DevTrack helps developers organize projects, manage tasks, track progress, and manage team members through a clean and interactive interface.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+### Dashboard
+- Overview of total projects and tasks
+- Task completion statistics
+- Recent projects and activity
 
-## React Compiler
+### Project Management
+- Create, edit, and delete projects
+- Search and filter projects
+- Sort projects
+- Persistent data using localStorage
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+### Task Management
+- Create, edit, and delete tasks
+- Search and filter tasks
+- Sort tasks by due date
+- Manage task priorities and statuses
 
-Note: This will impact Vite dev & build performances.
-You can also try [the experimental native React Compiler support in plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md#rust-react-compiler) by using `compiler: true` in the plugin options instead of using the Babel plugin.
+### Kanban Board
+- Four task columns: Todo, In Progress, Review, and Done
+- Drag-and-drop task management
+- Automatic task status updates
 
-## Expanding the ESLint configuration
+### Team Management
+- Add, edit, and delete team members
+- Search, filter, and sort members
+- Individual member profile pages
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Settings
+- Edit profile information
+- Application preferences
+- Light and dark mode
+- Password form validation (demo only)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Additional Features
+- Responsive layout for desktop and mobile
+- Profile dropdown
+- Toast notifications
+- Custom delete confirmation dialogs
+- Data persistence using localStorage
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Tech Stack
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- React
+- TypeScript
+- Tailwind CSS
+- Vite
+- React Router
+- Context API
+- Lucide React
+- dnd-kit
+- localStorage
 
+## Getting Started
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/shambhavipandey1612/devtrack.git
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+### 2. Navigate to the project folder
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+cd devtrack
 ```
+
+### 3. Install dependencies
+
+```bash
+npm install
+```
+
+### 4. Start the development server
+
+```bash
+npm run dev
+```
+
+Open the local URL displayed in your terminal.
+
+### 5. Create a production build
+
+```bash
+npm run build
+```
+
+## Data Storage
+
+DevTrack currently uses browser localStorage to persist projects, tasks, team members, profile details, and application preferences.
+
+This is a frontend project and does not currently use a backend authentication system or database.
+
+## Future Improvements
+
+- Backend and database integration
+- User authentication
+- Real notification system
+- Team collaboration features
+- Cloud data synchronization
+
+## Author
+
+**Shambhavi Pandey**
+
+GitHub: [@shambhavipandey1612](https://github.com/shambhavipandey1612)
+
+---
+
+Built as a hands-on frontend development project.
