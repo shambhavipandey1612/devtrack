@@ -42,6 +42,7 @@ function Settings() {
   function handleSaveProfile() {
     const profile = { name, email, role };
     localStorage.setItem("userProfile", JSON.stringify(profile));
+    window.dispatchEvent(new Event("profileUpdated"));
     setIsEditing(false);
     showToast("Profile updated successfully!", "success");
   }

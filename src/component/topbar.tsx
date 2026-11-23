@@ -1,22 +1,59 @@
 
-import { Search, Bell, UserRound } from "lucide-react";
+import { Search, Bell, UserRound ,User ,Settings,LogOut,} from "lucide-react";
 import { useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 function Topbar() {
   const location = useLocation();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const profileRef= useRef<HTMLDivElement>(null);
   const [profile, setProfile] = useState(() => {
   const savedProfile = localStorage.getItem("userProfile");
 
   return savedProfile
     ? JSON.parse(savedProfile)
     : {
-        name: "Shambhavi",
-        email: "",
-        role: "Developer",
+        name: "Alex Morgan",
+        email: "alex@example.com",
+        role: "Frontend Developer",
       };
 });
+useEffect(()=>{
+  function updateProfile() {
+    const savedProfile= localStorage.getItem("userProfile");
+    if(savedProfile) {
+      setProfile(JSON.parse(savedProfile));
+    }
+  }
+  window.addEventListener("storage",updateProfile);
+  window.addEventListener("profileUpdated",updateProfile);
+  return () =>{
+    window.removeEventListener("storage",updateProfile);
+     window.removeEventListener("profileUpdated",updateProfile);
+  };
+},[]);
+useEffect(() => {
+  function handleOutsideClick(event:MouseEvent){
+    if(profileRef.current && !profileRef.current.contains(event.target as Node)){
+        setIsProfileOpen(false);
+      }
+  }
+  document.addEventListener("mousedown",handleOutsideClick);
+  return()=>{
+    document.removeEventListener("mousedown",handleOutsideClick);
+  };
+},[]);
+useEffect(() =>{
+  function handleEscape(event:KeyboardEvent){
+    if(event.key==="Escape"){
+      setIsProfileOpen(false);
+    }
+  }
+  document.addEventListener("keydown",handleEscape);
+  return () => {
+    document.removeEventListener("keydown",handleEscape);
+  };
+},[]);
 
   const pageTitles: Record<string, string> = {
     "/": "Dashboard",
@@ -58,7 +95,8 @@ function Topbar() {
         </button>
 
         {/* Profile */}
-        <div className="relative">
+        <div className="relative" ref={profileRef}>
+        
         <button  onClick={() => setIsProfileOpen(!isProfileOpen)}
          className="flex items-center justify-center rounded-full bg-indigo-100 p-2 text-indigo-700
          hover:bg-indigo-200"><UserRound size={20} />
@@ -85,6 +123,7 @@ function Topbar() {
         }}
         className="w-full rounded-md px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-100 dark:text-gray-200 
         dark:hover:bg-gray-700">
+        <User size={16} className="mr-2 inline"/>
         My Profile
       </button>
 
@@ -94,6 +133,7 @@ function Topbar() {
         }}
         className="w-full rounded-md px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-100 dark:text-gray-200 
         dark:hover:bg-gray-700">
+          <Settings size={16} className="mr-2 inline"/>
         Settings
       </button>
 
@@ -101,6 +141,7 @@ function Topbar() {
 
       <button onClick={() => setIsProfileOpen(false)}
         className="w-full rounded-md px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50 dark:hover:bg-gray-700">
+          <LogOut size={16} className="mr-2 inline"/>
         Logout (Demo)
       </button>
     </div>
