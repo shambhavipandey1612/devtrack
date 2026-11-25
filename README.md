@@ -42,8 +42,22 @@ A responsive project management dashboard built with React, TypeScript, and Tail
 - Profile dropdown
 - Toast notifications
 - Custom delete confirmation dialogs
-- Data persistence using localStorage
+- Data persistence using localStorage 
 
+### Screenshots 
+ ### Dashboard
+  ![Dashboard](public/dashboard.png)
+
+  ### Projects
+  ![Projects](public/projects.png)
+
+  ### Kanban Board
+   ![Kanban](public/kanban.png)
+
+   ### Team
+   ![Team](public/team.png)
+
+   
 ## Tech Stack
 
 - React
