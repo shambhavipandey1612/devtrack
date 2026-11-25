@@ -3,9 +3,45 @@ import { Search, Bell, UserRound ,User ,Settings,LogOut,} from "lucide-react";
 import { useLocation } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 
+
+type Notification={
+  id:number;
+  message: string;
+  read : boolean;
+};
+
 function Topbar() {
   const location = useLocation();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+
+const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+
+const [notifications, setNotifications] = useState<Notification[]>(() =>{
+  const savedNotifications = localStorage.getItem("notifications");
+  return savedNotifications ?JSON.parse(savedNotifications):[
+  { id: 1, message: "Welcome to DevTrack!", read: false },
+  { id: 2, message: "Your dashboard is ready.", read: false },
+  { id: 3, message: "Explore your projects and tasks.", read: true },
+];
+});
+useEffect(()=>{
+  localStorage.setItem("notifcations",JSON.stringify(notifications));
+},[notifications]);
+
+const unreadCount = notifications.filter((notification)=>!notification.read).length;
+function markAsRead(id:number) {
+  setNotifications((previous)=>previous.map((notification)=>
+  notification.id===id?{...notification,read:true}
+   :notification));
+}
+function markAllAsRead() {
+  setNotifications((previous)=>previous.map((notification)=> ({
+    ...notification,read:true
+  }))
+);
+}
+
+
   const profileRef= useRef<HTMLDivElement>(null);
   const [profile, setProfile] = useState(() => {
   const savedProfile = localStorage.getItem("userProfile");
@@ -90,9 +126,53 @@ useEffect(() =>{
         </div>
 
         {/* Notification */}
-        <button className="text-slate-600 hover:text-indigo-600 dark:text-gray-300">
+        <button onClick={()=>{
+          setIsNotificationsOpen(!isNotificationsOpen);
+          setIsProfileOpen(false);
+        }}
+        className="relative text-slate-600 hover:text-indigo-600 dark:text-gray-300">
           <Bell size={20} />
+          {unreadCount >0 && (
+            <span className="absolute -right-2-top-2 flex h-5 w-5 items-center justify-center 
+            rounded-full bg-red-500 text-xs text-white">{unreadCount}</span>
+          )}
         </button>
+
+        {isNotificationsOpen && (
+  <div className="absolute right-16 top-16 z-50 w-72 rounded-lg border border-slate-200 bg-white p-3 
+  shadow-lg dark:border-gray-700 dark:bg-gray-800">
+
+    <div className="flex items-center justify-between border-b border-slate-200 pb-2 dark:border-gray-700">
+      <h3 className="font-semibold text-slate-800 dark:text-white">
+        Notifications
+      </h3>
+
+      <button onClick={markAllAsRead}
+        className="text-xs text-indigo-600 hover:underline dark:text-indigo-400">
+        Mark all as read
+      </button>
+    </div>
+
+    <div className="mt-2 space-y-2">
+      {notifications.map((notification) => (
+        <button key={notification.id}
+          onClick={() => markAsRead(notification.id)}
+          className={`w-full rounded-md p-3 text-left text-sm ${
+            notification.read
+              ? "bg-white text-slate-500 dark:bg-gray-800 dark:text-gray-400"
+              : "bg-indigo-50 text-slate-800 dark:bg-gray-700 dark:text-white"
+          }`}>
+          {notification.message}
+
+          {!notification.read && (
+            <span className="ml-2 inline-block h-2 w-2 rounded-full bg-indigo-600" />
+          )}
+        </button>
+      ))}
+    </div>
+
+  </div>
+)}
 
         {/* Profile */}
         <div className="relative" ref={profileRef}>
