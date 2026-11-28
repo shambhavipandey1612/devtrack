@@ -2,44 +2,18 @@
 import { Search, Bell, UserRound ,User ,Settings,LogOut,} from "lucide-react";
 import { useLocation } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
+import { useNotifications } from "../context/notificationcontext";
 
-
-type Notification={
-  id:number;
-  message: string;
-  read : boolean;
-};
 
 function Topbar() {
   const location = useLocation();
+  const { notifications,markAsRead,markAllAsRead}= useNotifications();
+  const unreadCount=notifications.filter((notification)=>!notification.read).length;
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
 const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
 
-const [notifications, setNotifications] = useState<Notification[]>(() =>{
-  const savedNotifications = localStorage.getItem("notifications");
-  return savedNotifications ?JSON.parse(savedNotifications):[
-  { id: 1, message: "Welcome to DevTrack!", read: false },
-  { id: 2, message: "Your dashboard is ready.", read: false },
-  { id: 3, message: "Explore your projects and tasks.", read: true },
-];
-});
-useEffect(()=>{
-  localStorage.setItem("notifcations",JSON.stringify(notifications));
-},[notifications]);
 
-const unreadCount = notifications.filter((notification)=>!notification.read).length;
-function markAsRead(id:number) {
-  setNotifications((previous)=>previous.map((notification)=>
-  notification.id===id?{...notification,read:true}
-   :notification));
-}
-function markAllAsRead() {
-  setNotifications((previous)=>previous.map((notification)=> ({
-    ...notification,read:true
-  }))
-);
-}
 
 
   const profileRef= useRef<HTMLDivElement>(null);
@@ -133,7 +107,7 @@ useEffect(() =>{
         className="relative text-slate-600 hover:text-indigo-600 dark:text-gray-300">
           <Bell size={20} />
           {unreadCount >0 && (
-            <span className="absolute -right-2-top-2 flex h-5 w-5 items-center justify-center 
+            <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center 
             rounded-full bg-red-500 text-xs text-white">{unreadCount}</span>
           )}
         </button>
